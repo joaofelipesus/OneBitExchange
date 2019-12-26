@@ -15,3 +15,10 @@ $(document).ready ->
           success: (data, text, jqXHR) ->
             $('#result').val(data.value)
         return false;
+
+  $('#btn-reverse').click ->
+    event.preventDefault()
+    source = $("#source_currency").val()
+    target = $("#target_currency").val()
+    $('#target_currency').val(source)
+    $('#source_currency').val(target)
