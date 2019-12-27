@@ -25,5 +25,10 @@ $(document).ready ->
     target = $("#target_currency").val()
     $('#target_currency').val(source)
     $('#source_currency').val(target)
+    api_call()
 
   $('#amount').keyup -> api_call()
+
+  $('#source_currency').change -> api_call()
+
+  $('#target_currency').change -> api_call()

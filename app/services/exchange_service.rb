@@ -11,16 +11,10 @@ class ExchangeService
 
   def perform
     if @source_currency != 'BTC' && @target_currency != 'BTC'
-      exchange_api_key()
+      exchange_api_call()
     else
-      calc_currency_to_bitcoin() if @target_currency == 'BTC'
-      if @source_currency == 'BTC'
-        url = "https://blockchain.info/tobtc?currency=#{@target_currency}&value=#{1}"
-        puts url
-        res = RestClient.get url
-        reference_value = JSON.parse(res.body).to_f
-        return (reference_value * @amount)
-      end
+      return to_bitcoin() if @target_currency == 'BTC'
+      return from_bitcoin() if @source_currency == 'BTC'
     end
   end
 
@@ -39,11 +33,22 @@ class ExchangeService
       end
     end
 
-    def calc_currency_to_bitcoin
+    def to_bitcoin
       url = "https://blockchain.info/tobtc?currency=#{@source_currency}&value=#{@amount}"
       res = RestClient.get url
       begin
         return JSON.parse(res.body).to_f
+      rescue RestClient::ExceptionWithResponse => e
+        e.response
+      end
+    end
+
+    def from_bitcoin
+      begin
+        url = "https://blockchain.info/ticker"
+        response = RestClient.get url
+        reference_value = JSON.parse(response.body)[@target_currency]["buy"].to_f
+        (reference_value * @amount)
       rescue RestClient::ExceptionWithResponse => e
         e.response
       end
