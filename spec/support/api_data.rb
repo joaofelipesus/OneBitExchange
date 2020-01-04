@@ -1,5 +1,5 @@
 RSpec.configure do |config|
-    config.before(:each) do   
+    config.before(:each) do
       stub_request(:get, /currencydatafeed.com/ )
       .with(headers: {
         'Accept'=>'*/*'

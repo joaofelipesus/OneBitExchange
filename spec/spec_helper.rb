@@ -3,6 +3,16 @@ WebMock.disable_net_connect!(allow_localhost: true)
 require File.expand_path("../../config/environment", __FILE__)
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
+require 'capybara/cuprite'
+Capybara.register_driver :cuprite do |app|
+  Capybara::Cuprite::Driver.new(
+    app,
+    js_errors:       true,
+    window_size:     [1200, 900],
+    browser_options: { 'no-sandbox': nil }
+  )
+end
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
