@@ -3,10 +3,14 @@ WebMock.disable_net_connect!(allow_localhost: true)
 require File.expand_path("../../config/environment", __FILE__)
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
-require "capybara/cuprite"
-Capybara.javascript_driver = :cuprite
-Capybara.register_driver(:cuprite) do |app|
-  Capybara::Cuprite::Driver.new(app, window_size: [1200, 800])
+require 'capybara/cuprite'
+Capybara.register_driver :cuprite do |app|
+  Capybara::Cuprite::Driver.new(
+    app,
+    js_errors:       true,
+    window_size:     [1200, 900],
+    browser_options: { 'no-sandbox': nil }
+  )
 end
 
 RSpec.configure do |config|
